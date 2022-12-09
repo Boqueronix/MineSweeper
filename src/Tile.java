@@ -38,6 +38,9 @@ public class Tile {
     }
     public void chain(){
         revealed = true;
+        if (mine){
+            Main.lose();
+        }
         if (val == 0){
             for (Tile t: Main.all) {
                 if (Math.abs (t.coords[0] - coords[0]) < 2 && Math.abs(t.coords[1] - coords[1]) < 2 && !t.revealed){

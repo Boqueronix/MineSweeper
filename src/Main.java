@@ -1,4 +1,3 @@
-import java.awt.event.InputEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -8,6 +7,7 @@ public class Main {
     public static Tile[] all;
     public static boolean flag = false;
     public static boolean mousePressed = false;
+    public static boolean gameEnd = false;
     public static void main(String[] args) {
         JFraming.createAndShowGUI();
         Timer waiter = new Timer("Until details are in");
@@ -49,15 +49,13 @@ public class Main {
             t.findVal();
         }
         Board.init();
-        while (true) {
+        while (!gameEnd) {
             if (StdDraw.isMousePressed() && !mousePressed) {
                 mousePressed = true;
                 click(StdDraw.mouseX, StdDraw.mouseY);
             } else if (!StdDraw.isMousePressed() && mousePressed) {
                 mousePressed = false;
-            } else if (mousePressed) {
-            }
-
+            }/* else if (mousePressed) {} */
         }
     }
     public static void click(double x, double y){
@@ -84,6 +82,36 @@ public class Main {
                 System.out.println(" Click on a proper Tile motherFucker");
             }
         }
+        if (!gameEnd) {
+            Board.init();
+            boolean winning = true;
+            for (Tile t: all) {
+                if (!t.revealed && !t.flagged && t.mine){
+                    winning = false;
+                    break;
+                }
+            }
+            if (winning) {
+                win();
+            }
+        }
+    }
+    public static void lose(){
+        gameEnd = true;
+        for (Tile t : all) {
+            t.revealed = true;
+            t.flagged = false;
+        }
         Board.init();
+        StdDraw.text(0.5, 1 + 1.0 / (2 * Main.size), "You lose MF");
+    }
+    public static void win(){
+        gameEnd = true;
+        for (Tile t : all) {
+            t.revealed = true;
+            t.flagged = false;
+        }
+        Board.init();
+        StdDraw.text(0.5, 1 + 1.0 / (2 * Main.size), "You win MF");
     }
 }
